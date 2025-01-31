@@ -1,0 +1,52 @@
+﻿@model List<Contact>
+@{
+    ViewBag.Title = "Contact Manager";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link rel="stylesheet" href="movie-list.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Contact Manager</h2>
+        <a asp-controller="Contact" asp-action="Add">Add New Contact</a>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Category</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var contact in Model)
+                {
+                    <tr>
+                        <td>
+                            <a asp-controller="Contact" asp-action="Details" asp-route-id="@contact.ContactId">
+                                @contact.FirstName
+                            </a>
+                        </td>
+                        <td>
+                            <a asp-controller="Contact" asp-action="Details" asp-route-id="@contact.ContactId">
+                                @contact.LastName
+                            </a>
+                        </td>
+                        <td>@contact.Phone</td>
+                        <td>@contact.Email</td>
+                        <td>@contact.Category.Name</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
