@@ -13,16 +13,14 @@ namespace ContactManager.Controllers
             _context = context;
         }
 
-        // GET: Add Contact Page
         [HttpGet]
         public IActionResult Add()
         {
             ViewBag.Action = "Add";
-            ViewBag.Categories = _context.Categories.OrderBy(c => c.Name).ToList();
+            ViewBag.Category = _context.Categories?.OrderBy(c => c.Name).ToList() ?? new List<Category>(); // Prevents null
             return View("Edit", new Contact());
         }
 
-        // GET: Edit Contact Page
         [HttpGet]
         public IActionResult Edit(int id)
         {
@@ -33,9 +31,10 @@ namespace ContactManager.Controllers
             }
 
             ViewBag.Action = "Edit";
-            ViewBag.Categories = _context.Categories.OrderBy(c => c.Name).ToList();
+            ViewBag.Category = _context.Categories?.OrderBy(c => c.Name).ToList() ?? new List<Category>(); // Prevents null
             return View(contact);
         }
+
 
         // POST: Add or Update Contact
         [HttpPost]
@@ -73,11 +72,13 @@ namespace ContactManager.Controllers
             return View(contact);
         }
 
-        // GET: Confirm Delete Page
         [HttpGet]
         public IActionResult Delete(int id)
         {
-            var contact = _context.Contacts.Find(id);
+            var contact = _context.Contacts
+                                 .Include(c => c.Category) // ✅ Ensure Category is loaded
+                                 .FirstOrDefault(c => c.ContactId == id);
+
             if (contact == null)
             {
                 return NotFound();
