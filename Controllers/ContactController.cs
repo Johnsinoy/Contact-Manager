@@ -33,7 +33,7 @@ namespace ContactManager.Controllers
             }
 
             ViewBag.Action = "Edit";
-            ViewBag.Categories = _context.Categories.OrderBy(c => c.Name).ToList();
+            ViewBag.Categories = _context.Categories?.OrderBy(c => c.Name).ToList();
             return View(contact);
         }
 
