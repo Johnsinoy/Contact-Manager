@@ -35,11 +35,7 @@
 
     <div class="form-group">
         <label asp-for="CategoryId" class="control-label"></label>
-<<<<<<< HEAD
-        <select asp-for="CategoryId" asp-items="@(new SelectList(ViewBag.Categories, "CategoryId", "Name"))" class="form-control">
-=======
-        <select asp-for="CategoryId" asp-items="@(ViewBag.Categories != null ? new SelectList(ViewBag.Categories, "CategoryId", "Name") : new SelectList(new List<SelectListItem>()))" class="form-control">
->>>>>>> 30f771ae5a2270911dfd3d63638856388c69c46d
+        <select asp-for="CategoryId" asp-items="@(new SelectList(ViewBag.Category, "CategoryId", "Name"))" class="form-control">
             <option value="">-- Select Category --</option>
         </select>
         <span asp-validation-for="CategoryId" class="text-danger"></span>

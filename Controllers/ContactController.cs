@@ -39,12 +39,8 @@ namespace ContactManager.Controllers
                 return NotFound();
             }
 
-<<<<<<< HEAD
             ViewBag.Action = "Edit";
-            ViewBag.Categories = _context.Categories?.OrderBy(c => c.Name).ToList();
-=======
             ViewBag.Categories = _context.Categories.OrderBy(c => c.Name).ToList();
->>>>>>> 30f771ae5a2270911dfd3d63638856388c69c46d
             return View(contact);
         }
 
