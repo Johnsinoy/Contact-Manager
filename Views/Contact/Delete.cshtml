@@ -7,7 +7,6 @@
 <h2>Delete Contact</h2>
 
 <h4>Are you sure you want to delete this contact?</h4>
-<h4>Test</h4>
 <hr />
 
 <table class="table">
@@ -33,7 +32,8 @@
     </tr>
 </table>
 
-<form asp-controller="Contact" asp-action="Delete" asp-route-id="@Model.ContactId" method="post">
+<form asp-controller="Contact" asp-action="DeleteConfirmed" asp-route-id="@Model.ContactId" method="post">
     <button type="submit" class="btn btn-danger">Delete</button>
     <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Cancel</a>
 </form>
+
