@@ -1,6 +1,7 @@
 ﻿using ContactManager.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace ContactManager.Controllers
 {
@@ -13,11 +14,17 @@ namespace ContactManager.Controllers
             _context = context;
         }
 
+        // GET: Display all contacts
+        public IActionResult Index()
+        {
+            var contacts = _context.Contacts.Include(c => c.Category).ToList();
+            return View(contacts);
+        }
+
         // GET: Add Contact Page
         [HttpGet]
         public IActionResult Add()
         {
-            ViewBag.Action = "Add";
             ViewBag.Categories = _context.Categories.OrderBy(c => c.Name).ToList();
             return View("Edit", new Contact());
         }
@@ -32,8 +39,12 @@ namespace ContactManager.Controllers
                 return NotFound();
             }
 
+<<<<<<< HEAD
             ViewBag.Action = "Edit";
             ViewBag.Categories = _context.Categories?.OrderBy(c => c.Name).ToList();
+=======
+            ViewBag.Categories = _context.Categories.OrderBy(c => c.Name).ToList();
+>>>>>>> 30f771ae5a2270911dfd3d63638856388c69c46d
             return View(contact);
         }
 
@@ -43,7 +54,6 @@ namespace ContactManager.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Action = contact.ContactId == 0 ? "Add" : "Edit";
                 ViewBag.Categories = _context.Categories.OrderBy(c => c.Name).ToList();
                 return View(contact);
             }
@@ -54,22 +64,18 @@ namespace ContactManager.Controllers
                 _context.Contacts.Update(contact);
 
             _context.SaveChanges();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index");
         }
 
         // GET: Contact Details Page
         [HttpGet]
         public IActionResult Details(int id)
         {
-            var contact = _context.Contacts
-                                  .Include(c => c.Category)
-                                  .FirstOrDefault(c => c.ContactId == id);
-
+            var contact = _context.Contacts.Include(c => c.Category).FirstOrDefault(c => c.ContactId == id);
             if (contact == null)
             {
                 return NotFound();
             }
-
             return View(contact);
         }
 
@@ -82,12 +88,11 @@ namespace ContactManager.Controllers
             {
                 return NotFound();
             }
-
             return View(contact);
         }
 
         // POST: Delete Contact
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         public IActionResult DeleteConfirmed(int id)
         {
             var contact = _context.Contacts.Find(id);
@@ -98,7 +103,14 @@ namespace ContactManager.Controllers
 
             _context.Contacts.Remove(contact);
             _context.SaveChanges();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index");
+        }
+
+        // GET: Cancel button action (Redirect appropriately)
+        [HttpGet]
+        public IActionResult Cancel(int? id)
+        {
+            return id.HasValue ? RedirectToAction("Details", new { id = id.Value }) : RedirectToAction("Index");
         }
     }
 }
