@@ -32,6 +32,7 @@ namespace ContactManager.Models
         [EmailAddress(ErrorMessage = "Invalid email format.")]
         public string? Email { get; set; }
 
+        [Required(ErrorMessage = "Category is required.")]
         [Range(1, int.MaxValue, ErrorMessage = "Please select a valid category.")]
         public int CategoryId { get; set; }
 
