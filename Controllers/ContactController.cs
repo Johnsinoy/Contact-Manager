@@ -91,6 +91,18 @@ namespace ContactManager.Controllers
                 return View(contact);
             }
 
+            // **Check for duplicates in Phone**
+            bool duplicateExists = _context.Contacts
+                .AsNoTracking()
+                .Any(c => c.Phone == contact.Phone); // Ensure it's not the same record being updated
+
+            if (duplicateExists)
+            {
+                ModelState.AddModelError("", "A contact with the same phone number already exists.");
+                ViewBag.Categories = _context.Categories.OrderBy(c => c.Name).ToList();
+                return View(contact);
+            }
+
             try
             {
                 if (contact.ContactId == 0)
