@@ -40,6 +40,14 @@ namespace ContactManager.Models
         [DataType(DataType.Date)]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime DateAdded { get; set; } = DateTime.Now;
+        // ✅ Ensure DateAdded is never modified externally
+        public void SetDateAddedIfNew()
+        {
+            if (DateAdded == default || DateAdded == DateTime.MinValue)
+            {
+                DateAdded = DateTime.Now; // Stores in local time
+            }
+        }
 
         public string Slug => (FirstName + "-" + LastName)?.ToLower().Replace(" ", "-");
     }

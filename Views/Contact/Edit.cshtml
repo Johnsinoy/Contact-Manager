@@ -53,8 +53,13 @@
         </select>
         <span asp-validation-for="CategoryId" class="text-danger"></span>
     </div>
-
-
+    @if (ViewBag.Title == "Add Contact")
+    {
+        <div class="form-group" style="display:none">
+            <label>Date Added:</label>
+            <input type="text" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")" readonly />
+        </div>
+    }
     <br />
 
     <button type="submit" class="btn btn-success">Save</button>

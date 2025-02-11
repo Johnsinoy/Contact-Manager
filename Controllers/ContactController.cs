@@ -16,6 +16,7 @@ namespace ContactManager.Controllers
         }
 
         // GET: Display all contacts
+        [HttpGet("contact/")]
         public IActionResult Index()
         {
             try
@@ -31,7 +32,7 @@ namespace ContactManager.Controllers
         }
 
         // GET: Add Contact Page
-        [HttpGet]
+        [HttpGet("contact/add/")]
         public IActionResult Add()
         {
             try
@@ -47,7 +48,7 @@ namespace ContactManager.Controllers
         }
 
         // GET: Edit Contact Page
-        [HttpGet]
+        [HttpGet("contact/edit/{id}/")]
         public IActionResult Edit(int id)
         {
             try
@@ -70,13 +71,32 @@ namespace ContactManager.Controllers
         }
 
         // POST: Add or Update Contact
-        [HttpPost]
+        [HttpPost("contact/edit/{id}/")]
         public IActionResult Edit(Contact contact)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                ViewBag.Categories = _context.Categories.OrderBy(c => c.Name).ToList();
-                return View(contact);
+                if (contact.ContactId == 0) // New contact
+                {
+                    contact.SetDateAddedIfNew(); // Ensures DateAdded is only set once
+                    _context.Contacts.Add(contact);
+                }
+                else // Editing an existing contact
+                {
+                    var existingContact = _context.Contacts.Find(contact.ContactId);
+                    if (existingContact != null)
+                    {
+                        existingContact.FirstName = contact.FirstName;
+                        existingContact.LastName = contact.LastName;
+                        existingContact.Phone = contact.Phone;
+                        existingContact.Email = contact.Email;
+                        existingContact.CategoryId = contact.CategoryId;
+                        // ❌ Do not update DateAdded
+                    }
+                }
+
+                _context.SaveChanges();
+                return RedirectToAction("Index");
             }
 
             // **Check if the email already exists in the database**
@@ -119,11 +139,12 @@ namespace ContactManager.Controllers
                 ViewBag.Categories = _context.Categories.OrderBy(c => c.Name).ToList();
                 return View(contact);
             }
+
         }
 
 
         // GET: Contact Details Page
-        [HttpGet]
+        [HttpGet("contact/details/{id}/")]
         public IActionResult Details(int id)
         {
             try
@@ -143,7 +164,7 @@ namespace ContactManager.Controllers
         }
 
         // GET: Confirm Delete Page
-        [HttpGet]
+        [HttpGet("contact/delete/{id}/")]
         public IActionResult Delete(int id)
         {
             try
@@ -163,7 +184,7 @@ namespace ContactManager.Controllers
         }
 
         // POST: Delete Contact
-        [HttpPost]
+        [HttpPost("contact/deleteconfirmed/{id}/")]
         public IActionResult DeleteConfirmed(int id)
         {
             try
@@ -186,7 +207,7 @@ namespace ContactManager.Controllers
         }
 
         // GET: Cancel button action (Redirect appropriately)
-        [HttpGet]
+        [HttpGet("contact/cancel/{id?}/")]
         public IActionResult Cancel(int? id)
         {
             return id.HasValue ? RedirectToAction("Details", new { id = id.Value }) : RedirectToAction("Index");
