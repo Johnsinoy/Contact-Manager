@@ -1,6 +1,7 @@
 ﻿using ContactManager.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 
 namespace ContactManager.Controllers
@@ -17,31 +18,55 @@ namespace ContactManager.Controllers
         // GET: Display all contacts
         public IActionResult Index()
         {
-            var contacts = _context.Contacts.Include(c => c.Category).ToList();
-            return View(contacts);
+            try
+            {
+                var contacts = _context.Contacts.Include(c => c.Category).ToList();
+                return View(contacts);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "An error occurred while fetching contacts. Please try again.");
+                return View("Error");
+            }
         }
 
         // GET: Add Contact Page
         [HttpGet]
         public IActionResult Add()
         {
-            ViewBag.Categories = _context.Categories.OrderBy(c => c.Name).ToList();
-            return View("Edit", new Contact());
+            try
+            {
+                ViewBag.Categories = _context.Categories.OrderBy(c => c.Name).ToList();
+                return View("Edit", new Contact());
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "An error occurred while loading the Add Contact page.");
+                return View("Error");
+            }
         }
 
         // GET: Edit Contact Page
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            var contact = _context.Contacts.Find(id);
-            if (contact == null)
+            try
             {
-                return NotFound();
-            }
+                var contact = _context.Contacts.Find(id);
+                if (contact == null)
+                {
+                    return NotFound();
+                }
 
-            ViewBag.Action = "Edit";
-            ViewBag.Categories = _context.Categories.OrderBy(c => c.Name).ToList();
-            return View(contact);
+                ViewBag.Action = "Edit";
+                ViewBag.Categories = _context.Categories.OrderBy(c => c.Name).ToList();
+                return View(contact);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "An error occurred while loading the Edit page.");
+                return View("Error");
+            }
         }
 
         // POST: Add or Update Contact
@@ -54,52 +79,98 @@ namespace ContactManager.Controllers
                 return View(contact);
             }
 
-            if (contact.ContactId == 0)
-                _context.Contacts.Add(contact);
-            else
-                _context.Contacts.Update(contact);
+            // **Check if the email already exists in the database**
+            bool emailExists = _context.Contacts
+                .AsNoTracking() // Prevents tracking issues
+                .Any(c => c.Email == contact.Email && c.ContactId != contact.ContactId);
 
-            _context.SaveChanges();
-            return RedirectToAction("Index");
+            if (emailExists)
+            {
+                ModelState.AddModelError("Email", "This email is already registered.");
+                ViewBag.Categories = _context.Categories.OrderBy(c => c.Name).ToList();
+                return View(contact);
+            }
+
+            try
+            {
+                if (contact.ContactId == 0)
+                    _context.Contacts.Add(contact);
+                else
+                    _context.Contacts.Update(contact);
+
+                _context.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            catch (Exception)
+            {
+                ModelState.AddModelError("", "An error occurred while saving the contact.");
+                ViewBag.Categories = _context.Categories.OrderBy(c => c.Name).ToList();
+                return View(contact);
+            }
         }
+
 
         // GET: Contact Details Page
         [HttpGet]
         public IActionResult Details(int id)
         {
-            var contact = _context.Contacts.Include(c => c.Category).FirstOrDefault(c => c.ContactId == id);
-            if (contact == null)
+            try
             {
-                return NotFound();
+                var contact = _context.Contacts.Include(c => c.Category).FirstOrDefault(c => c.ContactId == id);
+                if (contact == null)
+                {
+                    return NotFound();
+                }
+                return View(contact);
             }
-            return View(contact);
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "An error occurred while loading contact details.");
+                return View("Error");
+            }
         }
 
         // GET: Confirm Delete Page
         [HttpGet]
         public IActionResult Delete(int id)
         {
-            var contact = _context.Contacts.Find(id);
-            if (contact == null)
+            try
             {
-                return NotFound();
+                var contact = _context.Contacts.Find(id);
+                if (contact == null)
+                {
+                    return NotFound();
+                }
+                return View(contact);
             }
-            return View(contact);
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "An error occurred while loading the delete confirmation page.");
+                return View("Error");
+            }
         }
 
         // POST: Delete Contact
         [HttpPost]
         public IActionResult DeleteConfirmed(int id)
         {
-            var contact = _context.Contacts.Find(id);
-            if (contact == null)
+            try
             {
-                return NotFound();
-            }
+                var contact = _context.Contacts.Find(id);
+                if (contact == null)
+                {
+                    return NotFound();
+                }
 
-            _context.Contacts.Remove(contact);
-            _context.SaveChanges();
-            return RedirectToAction("Index");
+                _context.Contacts.Remove(contact);
+                _context.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "An error occurred while deleting the contact.");
+                return View("Error");
+            }
         }
 
         // GET: Cancel button action (Redirect appropriately)
