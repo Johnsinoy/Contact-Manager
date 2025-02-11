@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -7,7 +8,7 @@
 namespace ContactManager.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class Contact : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,7 +19,7 @@ namespace ContactManager.Migrations
                 {
                     CategoryId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -35,7 +36,8 @@ namespace ContactManager.Migrations
                     LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CategoryId = table.Column<int>(type: "int", nullable: false)
+                    CategoryId = table.Column<int>(type: "int", nullable: false),
+                    DateAdded = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -60,12 +62,12 @@ namespace ContactManager.Migrations
 
             migrationBuilder.InsertData(
                 table: "Contacts",
-                columns: new[] { "ContactId", "CategoryId", "Email", "FirstName", "LastName", "Phone" },
+                columns: new[] { "ContactId", "CategoryId", "DateAdded", "Email", "FirstName", "LastName", "Phone" },
                 values: new object[,]
                 {
-                    { 1, 1, "dolores@hotmail.com", "Dolores", "Del Rio", "555-987-6543" },
-                    { 2, 2, "efren@aol.com", "Efren", "Herrera", "555-456-7890" },
-                    { 3, 3, "MaryEllen@yahoo.com", "Mary Ellen", "Walton", "555-123-4567" }
+                    { 1, 1, new DateTime(2025, 2, 11, 8, 31, 25, 610, DateTimeKind.Utc).AddTicks(2220), "dolores@hotmail.com", "Dolores", "Del Rio", "555-987-6543" },
+                    { 2, 2, new DateTime(2025, 2, 11, 8, 31, 25, 610, DateTimeKind.Utc).AddTicks(2751), "efren@aol.com", "Efren", "Herrera", "555-456-7890" },
+                    { 3, 3, new DateTime(2025, 2, 11, 8, 31, 25, 610, DateTimeKind.Utc).AddTicks(2754), "MaryEllen@yahoo.com", "Mary Ellen", "Walton", "555-123-4567" }
                 });
 
             migrationBuilder.CreateIndex(

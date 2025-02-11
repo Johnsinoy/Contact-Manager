@@ -24,7 +24,9 @@ namespace ContactManager.Models
                LastName = "Del Rio",
                Phone = "555-987-6543",
                Email = "dolores@hotmail.com",
-               CategoryId = 1
+               CategoryId = 1,
+               DateAdded = new DateTime(2024, 2, 10, 0, 0, 0, DateTimeKind.Utc) // Use a fixed date
+
            },
            new Contact
            {
@@ -33,7 +35,9 @@ namespace ContactManager.Models
                LastName = "Herrera",
                Phone = "555-456-7890",
                Email = "efren@aol.com",
-               CategoryId = 2
+               CategoryId = 2,
+               DateAdded = new DateTime(2024, 2, 10, 0, 0, 0, DateTimeKind.Utc) // Use a fixed date
+
            },
            new Contact
            {
@@ -42,7 +46,9 @@ namespace ContactManager.Models
                LastName = "Walton",
                Phone = "555-123-4567",
                Email = "MaryEllen@yahoo.com",
-               CategoryId = 3
+               CategoryId = 3,
+               DateAdded = new DateTime(2024, 2, 10, 0, 0, 0, DateTimeKind.Utc) // Use a fixed date
+
            }
 
            );
