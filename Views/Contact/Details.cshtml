@@ -27,6 +27,10 @@
         <th>Category:</th>
         <td>@(Model.Category != null ? Model.Category.Name : "No Category")</td>
     </tr>
+    <tr>
+        <th>Date Added:</th>
+        <td>@Model.DateAdded</td>
+    </tr>
 </table>
 
 <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Back</a>

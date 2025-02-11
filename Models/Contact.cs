@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ContactManager.Models
 {
@@ -35,6 +36,10 @@ namespace ContactManager.Models
         public int CategoryId { get; set; }
 
         public Category? Category { get; set; }
+
+        [DataType(DataType.Date)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public DateTime DateAdded { get; set; } = DateTime.Now;
 
         public string Slug => (FirstName + "-" + LastName)?.ToLower().Replace(" ", "-");
     }

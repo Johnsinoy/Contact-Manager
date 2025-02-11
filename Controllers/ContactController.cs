@@ -148,7 +148,7 @@ namespace ContactManager.Controllers
         {
             try
             {
-                var contact = _context.Contacts.Find(id);
+                var contact = _context.Contacts.Include(c => c.Category).FirstOrDefault(c => c.ContactId == id);
                 if (contact == null)
                 {
                     return NotFound();
