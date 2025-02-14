@@ -53,6 +53,3 @@ namespace ContactManager.Models
         public string Slug => (FirstName + "-" + LastName)?.ToLower().Replace(" ", "-");
     }
 }
-
-
-//

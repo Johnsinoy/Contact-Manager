@@ -48,7 +48,7 @@ namespace ContactManager.Controllers
         }
 
         // GET: Edit Contact Page
-        [HttpGet("contact/edit/{id}/")]
+        [HttpGet("contact/edit/")]
         public IActionResult Edit(int id)
         {
             try
@@ -71,7 +71,7 @@ namespace ContactManager.Controllers
         }
 
         // POST: Add or Update Contact
-        [HttpPost("contact/edit/{id}/")]
+        [HttpPost("contact/edit/")]
         public IActionResult Edit(Contact contact)
         {
             if (ModelState.IsValid)

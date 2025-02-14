@@ -59,11 +59,17 @@
             <label>Date Added:</label>
             <input type="text" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")" readonly />
         </div>
+
     }
     <br />
 
     <button type="submit" class="btn btn-success">Save</button>
-    <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Cancel</a>
+    <a asp-controller="@(Model.ContactId == 0 ? "Home" : "Contact")"
+       asp-action="@(Model.ContactId == 0 ? "Index" : "Details")"
+       asp-route-id="@(Model.ContactId != 0 ? Model.ContactId : null)"
+       class="btn btn-secondary">
+        Cancel
+    </a>
 </form>
 
 <!-- Client-side validation -->
