@@ -32,6 +32,7 @@ namespace ContactManager.Models
         [EmailAddress(ErrorMessage = "Invalid email format.")]
         public string? Email { get; set; }
 
+        [Required(ErrorMessage = "Category is required.")]
         [Range(1, int.MaxValue, ErrorMessage = "Please select a valid category.")]
         public int CategoryId { get; set; }
 
@@ -40,10 +41,15 @@ namespace ContactManager.Models
         [DataType(DataType.Date)]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime DateAdded { get; set; } = DateTime.Now;
+        // ✅ Ensure DateAdded is never modified externally
+        public void SetDateAddedIfNew()
+        {
+            if (DateAdded == default || DateAdded == DateTime.MinValue)
+            {
+                DateAdded = DateTime.Now; // Stores in local time
+            }
+        }
 
         public string Slug => (FirstName + "-" + LastName)?.ToLower().Replace(" ", "-");
     }
 }
-
-
-//
